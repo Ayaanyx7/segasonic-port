@@ -185,7 +185,7 @@ jobs:
           cd build/bin/android
          
           # 2. Copy the ROM using an absolute path to avoid directory depth mistakes
-          curl -L "${{ secrets.BASEROM_URL }}" -o sonic.zip
+          curl -L "${{ secrets.SONIC_ZIP_BASE64 }}" -o sonic.zip
 
           # 3. Grant execution permissions and run the package compiler
           chmod +x ./SegaSonic\ APK
