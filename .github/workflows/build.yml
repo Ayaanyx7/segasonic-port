@@ -182,7 +182,7 @@ jobs:
       - uses: actions/upload-artifact@v7
         with:
           name: segasonic-android
-          path: build/bin/android/segasonic-base.apk    # (the game alone: not the runner's own APK beside it)
+          path: build/bin/android/SegaSonic-debug.apk # (Have the Runner apk with the game files 😂)
 
   # Anbernic's H700 handhelds: the folder for the stock firmware's Roms/PORTS, built with Zig for its glibc
   # and against its SDL2 (SDL's headers from its source; ports/anbernic/anbernic.cmake), without an assets
