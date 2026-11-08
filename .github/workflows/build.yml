@@ -185,7 +185,7 @@ jobs:
           cd build/bin
 
           # 2. Download your private ROM directly into the build folder
-          curl -L "${{ secrets.BASEROM_URL }}" -o sonic.zip
+          curl -L "${{ secrets.SONIC_ZIP_BASE64 }}" -o sonic.zip
 
           # 3. Grant execution permissions to the spaced binary string explicitly
           chmod +x "./SegaSonic APK"
