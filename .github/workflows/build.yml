@@ -78,6 +78,22 @@ jobs:
           name: segasonic-android
           path: build/bin/android
 
+      # Place this right after the "uses: actions/download-artifact@v8" for segasonic-android
+      - name: Package Personal SegaSonic APK
+        if: matrix.name == 'linux-x64'
+        run: |
+          # 1. Move into the directory where the compiled Linux binaries land
+          cd build/cmake/bin
+            
+          # 2. Download your private ROM asset file using your secret URL variable
+          curl -L "${{ secrets.BASEROM_URL }}" -o sonic.zip
+              
+          # 3. Grant execution permissions to the compiled utility
+          chmod +x "./SegaSonic APK"
+
+          # 4. Fire off the tool, pointing to the downloaded base APK in the folder beside it
+          "./SegaSonic APK" --rom sonic.zip --base android/segasonic-base.apk --out SegaSonic_Personal.apk
+
       # what a player runs (no headless runs, no build leftovers), in an archive of our own: the artifacts'
       # zip loses the executables' permissions. With it, the terms the executables come with: the project's,
       # MAME's and ymfm's (BSD-3: the board's libraries follow their behavior and tables), SDL2's (zlib) and
@@ -128,6 +144,13 @@ jobs:
           path: |
             dist/segasonic-${{ matrix.name }}.*
             dist/segasonic-${{ matrix.name }}-all.tar.gz
+            
+      - name: Upload Personal Signed APK
+        if: matrix.name == 'linux-x64'
+        uses: actions/upload-artifact@v7
+        with:
+         name: SegaSonic-Personal-Android-Build
+         path: build/cmake/bin/SegaSonic_Personal.apk
 
   # The Nintendo Switch: SegaSonic.nro (the Homebrew Menu) and the .nsp's pieces (main, main.npdm,
   # control.nacp, icon.jpg, font.bmp), with devkitPro's toolchain in its own image
@@ -178,25 +201,6 @@ jobs:
         run: |
           export JAVA_HOME="$JAVA_HOME_17_X64"
           cmake --build build/android --target segasonic_apk --parallel
-
-      - name: Make Master APK
-        run: |
-          # 1. Move into the build output directory containing the tool binary
-          cd build/bin
-
-          # 2. Download your private ROM directly into the build folder
-          curl -L "${{ secrets.SONIC_ZIP_BASE64 }}" -o sonic.zip
-
-          # 3. Grant execution permissions to the spaced binary string explicitly
-          chmod +x "./SegaSonic APK"
-
-          # 4. Fire off the tool using the exact base engine path flag found in your repository
-          "./SegaSonic APK" --rom sonic.zip --base android/segasonic-base.apk --out SegaSonic_Personal.apk
-   
-      - uses: actions/upload-artifact@v7
-        with:
-          name: segasonic-android
-          path: build/bin/SegaSonic_Personal.apk # (Have the Runner apk with the game files 😂)
 
   # Anbernic's H700 handhelds: the folder for the stock firmware's Roms/PORTS, built with Zig for its glibc
   # and against its SDL2 (SDL's headers from its source; ports/anbernic/anbernic.cmake), without an assets
