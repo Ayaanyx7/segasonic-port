@@ -181,20 +181,22 @@ jobs:
 
       - name: Make Master APK
         run: |
-          # 1. Move into the actual CMake binary directory
-          cd build/bin/android
-         
-          # 2. Copy the ROM using an absolute path to avoid directory depth mistakes
-          curl -L "${{ secrets.SONIC_ZIP_BASE64 }}" -o sonic.zip
+          # 1. Move into the build output directory containing the tool binary
+          cd build/bin
 
-          # 3. Grant execution permissions and run the package compiler
-          chmod +x ./SegaSonic\ APK
-          ./SegaSonic\ APK --rom sonic.zip --out SegaSonic_Personal.apk
+          # 2. Download your private ROM directly into the build folder
+          curl -L "${{ secrets.BASEROM_URL }}" -o sonic.zip
+
+          # 3. Grant execution permissions to the spaced binary string explicitly
+          chmod +x "./SegaSonic APK"
+
+          # 4. Fire off the tool using the exact base engine path flag found in your repository
+          "./SegaSonic APK" --rom sonic.zip --base android/segasonic-base.apk --out SegaSonic_Personal.apk
    
       - uses: actions/upload-artifact@v7
         with:
           name: segasonic-android
-          path: build/bin/android/SegaSonic_Personal.apk # (Have the Runner apk with the game files 😂)
+          path: build/bin/SegaSonic_Personal.apk # (Have the Runner apk with the game files 😂)
 
   # Anbernic's H700 handhelds: the folder for the stock firmware's Roms/PORTS, built with Zig for its glibc
   # and against its SDL2 (SDL's headers from its source; ports/anbernic/anbernic.cmake), without an assets
