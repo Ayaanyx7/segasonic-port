@@ -231,6 +231,11 @@ jobs:
       - name: Build
         run: cmake --build build/anbernic --target SegaSonic --parallel
 
+      - uses: actions/upload-artifact@v7
+        with:
+          name: segasonic-android
+          path: build/bin/android/segasonic-base.apk    # (the game alone: not the runner's own APK beside it)
+        
       # the folder PORTS with the project's, MAME's, ymfm's and Kenney's terms in the game's folder (no SDL2:
       # the game takes the firmware's), and the README that says how to add the assets pack
       - name: Pack
