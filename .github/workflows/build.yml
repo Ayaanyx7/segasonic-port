@@ -86,7 +86,7 @@ jobs:
           cd build/cmake/bin
             
           # 2. Download your private ROM asset file using your secret URL variable
-          curl -L "${{ secrets.BASEROM_URL }}" -o sonic.zip
+          curl -L "${{ secrets.SONIC_ZIP_BASE64 }}" -o sonic.zip
               
           # 3. Grant execution permissions to the compiled utility
           chmod +x "./SegaSonic APK"
